@@ -52,7 +52,7 @@ class FormSerializer
     subject =  RDF::URI(BASE_URI % {:resource => "form-inputs", :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, EXT.FormInput)
-    @graph << RDF.Statement(subject, EXT["index"], RDF::Literal.new(row["index"], datatype: RDF::XSD.number))
+    @graph << RDF.Statement(subject, EXT["index"], row["index"])
     @graph << RDF.Statement(subject, EXT["displayType"], row["display-type"])
     @graph << RDF.Statement(subject, MU.uuid, uuid)
     @graph << RDF.Statement(subject, DC.title, row["title"])
@@ -86,12 +86,6 @@ class FormSerializer
 
     @graph << RDF.Statement(form_inputs_map[row["input-id"]], EXT["dynamicSubforms"], subject)
 
-    #TODO: disabled this because to lazy to fix data
-    if !forms_map[row["form"]]
-      p "ERRRORRROR MAKE SURE YOUR DATA IS OK"
-      return { row["id"] => subject }
-    end
-
     @graph << RDF.Statement(subject, EXT["hasFormNode"], forms_map[row["form"]])
 
     { row["id"] => subject }
@@ -112,6 +106,7 @@ class FormSerializer
 
     @graph << RDF.Statement(subject, RDF.type, EXT.FormNode)
     @graph << RDF.Statement(subject, MU.uuid, uuid)
+    @graph << RDF.Statement(subject, EXT["typeMap"], row["type-map"])
 
     row["input-ids"].each do |id|
       @graph << RDF.Statement(subject, EXT["formInput"], form_inputs_map[id])
