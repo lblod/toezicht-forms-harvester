@@ -3,7 +3,7 @@
 This script generates form data frontent-loket/toezicht component.
 
 Google spreadsheet is used as data source
-Please read this (tutorial)[https://developers.google.com/sheets/api/quickstart/ruby] to get started.
+Please read this [tutorial](https://developers.google.com/sheets/api/quickstart/ruby) to get started.
 
 ## Expected input
 
