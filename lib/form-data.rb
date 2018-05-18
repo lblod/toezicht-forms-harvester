@@ -1,30 +1,22 @@
 require 'json'
 
 class FormData
+  # test
+  #FILE_ID =  '1jma5WV28Dg8bIKkQocRx1HlVVMvnwe0nyD4c165sMcY'
+  # prod
   FILE_ID = '1eLDfwgzc87hTj5ukV7LczZ8QvMBSJUtfrEFEGA9jfUo'
   def initialize(google_client)
     @client = google_client
   end
 
+  def code_lists
+    tab = "code_lists"
+    @client.get_spreadsheet_tab_values(FILE_ID, tab)
+  end
+
   def form_inputs
     inputs_tab = "inputs"
-    input_values_tab =  "input_values"
-
-    inputs = @client.get_spreadsheet_tab_values(FILE_ID, inputs_tab)
-    input_values = @client.get_spreadsheet_tab_values(FILE_ID, input_values_tab)
-
-    # group possible values per input_id
-    input_values = input_values.reduce(Hash.new{|h, k| h[k] = [] }) do |r, e|
-      r[e["input-id"]] << e["value"]
-      r
-    end
-
-    inputs = inputs.map { |e|
-      if input_values[e["id"]].length > 0
-        e["options"] = input_values[e["id"]].to_json
-      end
-      e
-    }
+    @client.get_spreadsheet_tab_values(FILE_ID, inputs_tab)
   end
 
   def dynamic_subforms
