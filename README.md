@@ -2,8 +2,7 @@
 
 This script generates form data frontent-loket/toezicht component.
 
-Google spreadsheet is used as data source
-Please read this [tutorial](https://developers.google.com/sheets/api/quickstart/ruby) to get started.
+Google spreadsheet is used as data source. Please read this [tutorial](https://developers.google.com/sheets/api/quickstart/ruby) to get started.
 
 ## Expected input
 
@@ -22,10 +21,9 @@ Please read this [tutorial](https://developers.google.com/sheets/api/quickstart/
 The script can be executed in a Docker container through the following command:
 ```bash
 docker run -it --rm -v "$PWD":/app -w /app ruby:2.5 ./run.sh
-Usage: run.sh
+```
 
 ## Developing the script
-
 Start a Docker container:
 ```bash
 docker run -it --name toezicht-forms-harvester -v "$PWD":/app -w /app ruby:2.5 /bin/bash
