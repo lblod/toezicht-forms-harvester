@@ -27,7 +27,8 @@ class FormSerializer
   end
 
   def load_form_data
-    @code_lists =@form_data.code_lists
+    @entity_uris = @form_data.entity_uris
+    @code_lists = @form_data.code_lists
     @form_inputs = @form_data.form_inputs
     @subforms = @form_data.dynamic_subforms
     @forms = @form_data.form_nodes
@@ -35,7 +36,8 @@ class FormSerializer
 
   def serialize
     load_form_data
-    code_lists_map = create_code_lists
+    entities_map = create_entities
+    code_lists_map = create_code_lists(entities_map)
     write_ttl_to_file(@output_folder, 'toezicht-code-lists', @graph)
     @graph = RDF::Graph.new
     form_inputs_map = create_form_inputs
@@ -44,15 +46,25 @@ class FormSerializer
     write_ttl_to_file(@output_folder, 'toezicht-forms', @graph)
   end
 
-  def create_code_lists
+  def create_entities
+    entities_map = {}
+    @entity_uris.each do |row|
+      key = row['label']
+      uri = row['uri']
+      entities_map[key] = uri
+    end
+    entities_map
+  end
+  
+  def create_code_lists(entities_map)
     code_lists_map = {}
     @code_lists.each do |row|
-      code_lists_map.merge!(create_code_list(row))
+      code_lists_map.merge!(create_code_list(entities_map, row))
     end
     code_lists_map
   end
 
-  def create_code_list(row)
+  def create_code_list(entities_map, row)
     salt = "ded56bf0-9df7-44d6-8686-7f0dfa5fbfaa"
     uuid = hash(salt + ":" + row["type"] + ":" +row["value"])
     subject =  RDF::URI(BASE_URI % {:resource => row["type"], :id => uuid})
@@ -64,7 +76,10 @@ class FormSerializer
     if row["type"] == "toezicht-inzending-types"
       @graph << RDF.Statement(subject, RDF.type, TOEZICHT["InzendingType"])
     else
-      @graph << RDF.Statement(subject, RDF.type, TOEZICHT["decisionType"])
+      @graph << RDF.Statement(subject, RDF.type, TOEZICHT["DecisionType"])
+      ['gemeente', 'district', 'ocmw', 'provincie'].each do |key|
+        @graph << RDF.Statement(subject, EXT.decidableBy, RDF::URI(entities_map[key])) if (row[key] == 'x')
+      end
     end
     @graph << RDF.Statement(subject, MU.uuid, uuid)
     @graph << RDF.Statement(subject, SKOS.prefLabel, row["value"])

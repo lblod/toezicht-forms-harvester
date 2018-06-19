@@ -9,6 +9,11 @@ class FormData
     @client = google_client
   end
 
+  def entity_uris
+    inputs_tab = "entity_uris"
+    @client.get_spreadsheet_tab_values(FILE_ID, inputs_tab)
+  end
+
   def code_lists
     tab = "code_lists"
     @client.get_spreadsheet_tab_values(FILE_ID, tab)
