@@ -49,13 +49,13 @@ class FormSerializer
   def create_entities
     entities_map = {}
     @entity_uris.each do |row|
-      key = row['label']
-      uri = row['uri']
+      key = row['LABEL']
+      uri = row['URI']
       entities_map[key] = uri
     end
     entities_map
   end
-  
+
   def create_code_lists(entities_map)
     code_lists_map = {}
     @code_lists.each do |row|
@@ -66,25 +66,23 @@ class FormSerializer
 
   def create_code_list(entities_map, row)
     salt = "ded56bf0-9df7-44d6-8686-7f0dfa5fbfaa"
-    uuid = hash(salt + ":" + row["type"] + ":" +row["value"])
-    subject =  RDF::URI(BASE_URI % {:resource => row["type"], :id => uuid})
+    uuid = hash(salt + ":" + row["TYPE"] + ":" +row["CODE"])
+    subject =  RDF::URI(BASE_URI % {:resource => row["TYPE"], :id => uuid})
 
-    if row["type"] != "toezicht-inzending-types" and row["type"] != "besluit-types"
-      raise "Unknown type " + row["type"]
+    @graph << RDF.Statement(subject, RDF.type, TOEZICHT[row["TYPE"]])
+
+    if row["TYPE"] == "Nomenclature"
+          @graph << RDF.Statement(subject, TOEZICHT["nomeclatureCode"], row["CODE"])
     end
-
-    if row["type"] == "toezicht-inzending-types"
-      @graph << RDF.Statement(subject, RDF.type, TOEZICHT["InzendingType"])
-    else
-      @graph << RDF.Statement(subject, RDF.type, TOEZICHT["DecisionType"])
-      ['gemeente', 'district', 'ocmw', 'provincie'].each do |key|
+    if row["TYPE"] == "DecisionType"
+      ['GEMEENTE', 'DISTRICT', 'OCMW', 'PROVINCIE'].each do |key|
         @graph << RDF.Statement(subject, EXT.decidableBy, RDF::URI(entities_map[key])) if (row[key] == 'x')
       end
     end
     @graph << RDF.Statement(subject, MU.uuid, uuid)
-    @graph << RDF.Statement(subject, SKOS.prefLabel, row["value"])
+    @graph << RDF.Statement(subject, SKOS.prefLabel, row["OMSCHRIJVINGKORT"])
 
-    { row["id"] => {"uri" => subject, "uuid" => uuid } }
+    { row["ID"] => {"URI" => subject, "UUID" => uuid } }
   end
 
   def create_form_inputs
@@ -97,22 +95,22 @@ class FormSerializer
 
   def create_form_input(row)
     salt = "3aa85ccd-e17b-4a47-b9c6-19ab06efa682"
-    uuid = hash(salt + ":" + row["id"])
+    uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "form-inputs", :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, EXT.FormInput)
-    @graph << RDF.Statement(subject, EXT["index"], row["index"])
-    @graph << RDF.Statement(subject, EXT["displayType"], row["display-type"])
+    @graph << RDF.Statement(subject, EXT["index"], row["INDEX"])
+    @graph << RDF.Statement(subject, EXT["displayType"], row["DISPLAY-TYPE"])
     @graph << RDF.Statement(subject, MU.uuid, uuid)
-    @graph << RDF.Statement(subject, DC.title, row["title"])
+    @graph << RDF.Statement(subject, DC.title, row["TITLE"])
 
-    if row["options"]
-      @graph << RDF.Statement(subject, EXT.string , row["options"])
+    if row["OPTIONS"]
+      @graph << RDF.Statement(subject, EXT.string , row["OPTIONS"])
     end
 
-    @graph << RDF.Statement(subject, ADMS.identifier, row["identifier"])
+    @graph << RDF.Statement(subject, ADMS.identifier, row["IDENTIFIER"])
 
-    { row["id"] => subject }
+    { row["ID"] => subject }
   end
 
   def create_dynamic_subforms(form_inputs_map, forms_map, code_lists_map)
@@ -125,24 +123,29 @@ class FormSerializer
 
   def create_dynamic_subform(form_inputs_map, forms_map, code_lists_map, row)
     salt = "b86cebbe-aff5-4bc9-b290-fd0b63e5f60c"
-    uuid = hash(salt + ":" + row["id"])
+    uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "dynamic-subforms", :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, EXT.DynamicSubform)
     @graph << RDF.Statement(subject, MU.uuid, uuid)
-    @graph << RDF.Statement(subject, EXT["matchKind"], row["match-kind"])
-    @graph << RDF.Statement(subject, EXT["key"], row["key"])
+    @graph << RDF.Statement(subject, EXT["matchKind"], row["MATCH-KIND"])
+    @graph << RDF.Statement(subject, EXT["key"], row["KEY"])
 
-    if row["match-kind"] == "uuid"
-      @graph << RDF.Statement(subject, EXT["value"], code_lists_map[row["code-list-id"]]["uuid"])
+    if row["MATCH-KIND"] == "uuid"
+      @graph << RDF.Statement(subject, EXT["value"], code_lists_map[row["CODE-LIST-ID"]]["UUID"])
     else
-      @graph << RDF.Statement(subject, EXT["value"], row["value"])
+      raise "sorry we don't support other match kinds, during import"
     end
-    @graph << RDF.Statement(form_inputs_map[row["input-id"]], EXT["dynamicSubforms"], subject)
 
-    @graph << RDF.Statement(subject, EXT["hasFormNode"], forms_map[row["form"]])
+    @graph << RDF.Statement(form_inputs_map[row["INPUT-ID"]], EXT["dynamicSubforms"], subject)
 
-    { row["id"] => subject }
+    if not forms_map[row["FORM"]]
+      binding.pry
+    end
+
+    @graph << RDF.Statement(subject, EXT["hasFormNode"], forms_map[row["FORM"]])
+
+    { row["ID"] => subject }
   end
 
   def create_forms(form_inputs_map)
@@ -155,18 +158,18 @@ class FormSerializer
 
   def create_form(form_inputs_map, row)
     salt = "346761e7-be8e-43dc-815e-e9321d8b01b5"
-    uuid = hash(salt + ":" + row["id"])
+    uuid = hash(salt + ":" + row["ID"].to_s)
     subject =  RDF::URI(BASE_URI % {:resource => "form-nodes", :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, EXT.FormNode)
     @graph << RDF.Statement(subject, MU.uuid, uuid)
-    @graph << RDF.Statement(subject, EXT["typeMap"], row["type-map"])
+    @graph << RDF.Statement(subject, EXT["typeMap"], row["TYPE-MAP"])
 
-    row["input-ids"].each do |id|
-      @graph << RDF.Statement(subject, EXT["formInput"], form_inputs_map[id])
+    row["INPUT-IDS"].each do |id|
+       @graph << RDF.Statement(subject, EXT["formInput"], form_inputs_map[id])
     end
 
-    { row["id"] => subject }
+    { row["ID"] => subject }
   end
 
   def write_ttl_to_file(folder, file, graph, timestamp_ttl = false)
