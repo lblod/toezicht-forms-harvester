@@ -22,13 +22,21 @@ class FormData
 
     codes.each do |code|
       type_data = form_input_values.detect {|e| e["ID"] == code["EIGENSCHAPID"]}
+      if not type_data
+        p "Warning code #{code} is not linked to existing input-field (which should be normal)"
+        next
+      end
       code["TYPE"] = type_data["TYPE"]
       code["ON-PATH"] = type_data["ON-PATH"]
     end
 
+    # filter out  codes with no ["TYPE"]
+    codes = codes.select { |code| code["TYPE"] }
+
     # merge with besluit type (a little complicated procedure, since list will be used to build up subforms too)
     new_base_index = codes[-1]["ID"].to_i + 1
-    file_id = "1cDyVoLNXSX8f1Q0cUuKirRoUlHVIe5Cm2nyQudK1700"
+    #file_id = "1cDyVoLNXSX8f1Q0cUuKirRoUlHVIe5Cm2nyQudK1700"
+    file_id = '10QnfDgbSACq17l1MoOahAbfgCHLivMrcXJlpWbsKH44'
     tab = "TYPEBESLUIT"
     @client.get_spreadsheet_tab_values(file_id, tab).each do |code|
       code["FORMID"] = code["ID"] # this number needs to be kept
@@ -42,7 +50,8 @@ class FormData
   end
 
   def form_inputs
-    file_id = "1Z2ju6dME0lv73TK2aYPLh4olDzG6wKYBR5uRaaOATE8"
+    file_id = '1lNQCFATRKmTjYc1DFjbLn4bui_fiujPB5u0PZcxibxQ'
+    #file_id = "1Z2ju6dME0lv73TK2aYPLh4olDzG6wKYBR5uRaaOATE8"
     inputs_tab = "EIGENSCHAP"
     @client.get_spreadsheet_tab_values(file_id, inputs_tab).select {|input| not input["IGNORE"] == "TRUE"}
   end
@@ -66,7 +75,8 @@ class FormData
   end
 
   def form_nodes
-    file_id = "1JjNZ9VyVTSYX7V6P2Z_JCIoDKi9aP1oW2sb7wNr3rgs"
+    file_id = '1-bvRwJcZNZRpkCoxjrMRm-bG4_RexccpaFO-mb_pW7w'
+    #file_id = "1JjNZ9VyVTSYX7V6P2Z_JCIoDKi9aP1oW2sb7wNr3rgs"
     forms_tab = "TYPEBESLUIT_EIGENSCHAP_REL"
     forms = @client.get_spreadsheet_tab_values(file_id, forms_tab)
 
