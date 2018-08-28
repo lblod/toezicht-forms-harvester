@@ -56,6 +56,22 @@ class FormSerializer
     entities_map
   end
 
+  def create_input_state()
+    salt = "0e1a2708-39fb-4218-b2c7-0436886e4053"
+    validation_name = "empty"
+    state_name = "noSend"
+    uuid = hash(salt + ":" + validation_name + ":" + state_name)
+
+    subject = RDF::URI(BASE_URI % {:resource => "input-states", :id => uuid})
+
+    @graph << RDF.Statement(subject, RDF.type, EXT["InputState"])
+    @graph << RDF.Statement(subject, MU.uuid, uuid)
+    @graph << RDF.Statement(subject, EXT["validationName"], validation_name)
+    @graph << RDF.Statement(subject, EXT["stateName"], state_name)
+
+    subject
+  end
+
   def create_code_lists(entities_map)
     code_lists_map = {}
     @code_lists.each do |row|
