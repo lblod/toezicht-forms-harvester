@@ -105,7 +105,7 @@ class FormSerializer
     @graph << RDF.Statement(subject, DC.title, row["TITLE"])
 
     if row["OPTIONS"]
-      @graph << RDF.Statement(subject, EXT.string , row["OPTIONS"])
+      @graph << RDF.Statement(subject, EXT.options , row["OPTIONS"])
     end
 
     @graph << RDF.Statement(subject, ADMS.identifier, row["IDENTIFIER"])
