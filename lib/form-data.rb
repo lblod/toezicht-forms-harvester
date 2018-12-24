@@ -7,13 +7,13 @@ class FormData
   end
 
   def entity_uris
-    file_id = '1MT12P1U5Dwp9mhVkJXC1oMbZhjbQdiEsyWVUZSeGTZI'
+    file_id = '1WMSfiX7eubZHprsaOhYNJuUFrB9Ca4KIH9ucVUnbJxc'
     inputs_tab = "entity_uris"
     @client.get_spreadsheet_tab_values(file_id, inputs_tab)
   end
 
   def code_lists
-    file_id = "1mpihMEXzqGwRPsoABoAHgx01doA0IUfzmcbTxBqriAg"
+    file_id = "1p4dXSoAmY8613wJiPOfrKR55sA8VPxrOexokzb7V7U8"
     tab = "EIGENSCHAPWAARDE"
     codes = @client.get_spreadsheet_tab_values(file_id, tab).sort_by {|code| code["ID"]}
 
@@ -35,8 +35,7 @@ class FormData
 
     # merge with besluit type (a little complicated procedure, since list will be used to build up subforms too)
     new_base_index = codes[-1]["ID"].to_i + 1
-    #file_id = "1cDyVoLNXSX8f1Q0cUuKirRoUlHVIe5Cm2nyQudK1700"
-    file_id = '10QnfDgbSACq17l1MoOahAbfgCHLivMrcXJlpWbsKH44'
+    file_id = '1GByfyfO2eMkuiMUi22j8Ybdqjxd8_EO8moOCdS2xAvs'
     tab = "TYPEBESLUIT"
     @client.get_spreadsheet_tab_values(file_id, tab).each do |code|
       code["FORMID"] = code["ID"] # this number needs to be kept
@@ -50,8 +49,7 @@ class FormData
   end
 
   def form_inputs
-    file_id = '1lNQCFATRKmTjYc1DFjbLn4bui_fiujPB5u0PZcxibxQ'
-    #file_id = "1Z2ju6dME0lv73TK2aYPLh4olDzG6wKYBR5uRaaOATE8"
+    file_id = '1g3eluO2ZvGDJJ0U8f-FWBT0qzYQtcmhupuG4-QjjNOI'
     inputs_tab = "EIGENSCHAP"
     @client.get_spreadsheet_tab_values(file_id, inputs_tab).select {|input| not input["IGNORE"] == "TRUE"}
   end
@@ -75,8 +73,7 @@ class FormData
   end
 
   def form_nodes
-    file_id = '1-bvRwJcZNZRpkCoxjrMRm-bG4_RexccpaFO-mb_pW7w'
-    #file_id = "1JjNZ9VyVTSYX7V6P2Z_JCIoDKi9aP1oW2sb7wNr3rgs"
+    file_id = '14Sh31npY2S2aGI1DC7Rl6of_0O-OxG2xugH63vtKSMk'
     forms_tab = "TYPEBESLUIT_EIGENSCHAP_REL"
     forms = @client.get_spreadsheet_tab_values(file_id, forms_tab)
 
