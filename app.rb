@@ -83,6 +83,12 @@ class FormSerializer
 
   def create_code_list(entities_map, row)
     salt = "ded56bf0-9df7-44d6-8686-7f0dfa5fbfaa"
+
+    if row["TYPE"] == "DecisionType"
+      p "Using new seed for decision type"
+      salt = "2f602b4f-2c18-471f-9456-2b7a9f04ae86"
+    end
+
     uuid = hash(salt + ":" + row["TYPE"] + ":" +row["CODE"])
     subject =  RDF::URI(BASE_URI % {:resource => row["TYPE"], :id => uuid})
 
@@ -144,7 +150,7 @@ class FormSerializer
   end
 
   def create_dynamic_subform(form_inputs_map, forms_map, code_lists_map, row)
-    salt = "b86cebbe-aff5-4bc9-b290-fd0b63e5f60c"
+    salt = "fc356663-539a-427a-89d9-0a0bb22139d4"
     uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "dynamic-subforms", :id => uuid})
 
@@ -179,7 +185,7 @@ class FormSerializer
   end
 
   def create_form(form_inputs_map, row)
-    salt = "346761e7-be8e-43dc-815e-e9321d8b01b5"
+    salt = "fe4b8928-8b89-46b1-9110-da95975d949c"
     uuid = hash(salt + ":" + row["ID"].to_s)
     subject =  RDF::URI(BASE_URI % {:resource => "form-nodes", :id => uuid})
 
