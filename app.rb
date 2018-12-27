@@ -83,12 +83,6 @@ class FormSerializer
 
   def create_code_list(entities_map, row)
     salt = "ded56bf0-9df7-44d6-8686-7f0dfa5fbfaa"
-
-    if row["TYPE"] == "DecisionType"
-      p "Using new seed for decision type"
-      salt = "2f602b4f-2c18-471f-9456-2b7a9f04ae86"
-    end
-
     uuid = hash(salt + ":" + row["TYPE"] + ":" +row["CODE"])
     subject =  RDF::URI(BASE_URI % {:resource => row["TYPE"], :id => uuid})
 
@@ -117,7 +111,7 @@ class FormSerializer
   end
 
   def create_form_input(row, input_state)
-    salt = "3aa85ccd-e17b-4a47-b9c6-19ab06efa682"
+    salt = "018547bf-c213-4a2b-953d-1f457412fdf0"
     uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "form-inputs", :id => uuid})
 
