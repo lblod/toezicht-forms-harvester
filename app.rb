@@ -15,6 +15,7 @@ class FormSerializer
   MU = RDF::Vocabulary.new("http://mu.semte.ch/vocabularies/core/")
   EXT = RDF::Vocabulary.new("http://mu.semte.ch/vocabularies/ext/")
   SKOS = RDF::Vocab::SKOS
+  SCHEMA = RDF::Vocab::SCHEMA
   TOEZICHT = RDF::Vocabulary.new("http://mu.semte.ch/vocabularies/ext/supervision/")
 
   BASE_URI = 'http://data.lblod.info/%{resource}/%{id}'
@@ -87,6 +88,7 @@ class FormSerializer
     subject =  RDF::URI(BASE_URI % {:resource => row["TYPE"], :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, TOEZICHT[row["TYPE"]])
+    @graph << RDF.Statement(subject, SCHEMA.position, RDF::Literal.new(row["ID"].to_i, datatype: RDF::XSD.integer))
 
     if row["TYPE"] == "Nomenclature"
           @graph << RDF.Statement(subject, TOEZICHT["nomenclatureCode"], row["CODE"])
