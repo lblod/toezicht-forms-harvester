@@ -94,7 +94,7 @@ class FormSerializer
           @graph << RDF.Statement(subject, TOEZICHT["nomenclatureCode"], row["CODE"])
     end
     if row["TYPE"] == "DecisionType"
-      ['GEMEENTE', 'DISTRICT', 'OCMW', 'PROVINCIE', 'OCMWV', 'AGB', 'APB', 'IGS', 'HVZ', 'PZ'].each do |key|
+      ['GEMEENTE', 'DISTRICT', 'OCMW', 'PROVINCIE', 'OCMWV', 'AGB', 'APB', 'IGS', 'HVZ', 'PZ', 'DV', 'OV', 'PV'].each do |key|
         @graph << RDF.Statement(subject, EXT.decidableBy, RDF::URI(entities_map[key])) if (row[key] and row[key].upcase == 'X')
       end
     end
