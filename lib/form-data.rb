@@ -57,6 +57,9 @@ class FormData
   def dynamic_subforms
     codes = code_lists.select {|code| code["EIGENSCHAPID"] == 0}.sort{|code| code["ID"]}
     subforms = []
+
+    # initially the script only started with one subform per type besluit. They are located on another sheet.
+    # let's keep them here as is.
     codes.each_with_index do |code, index|
       subform = {}
       subform["ID"] = index.to_s
@@ -69,6 +72,50 @@ class FormData
       subforms << subform
     end
 
+    # We want to be able to also do nested subforms, so we created a new sheet for this.
+    # By fear of breaking something, we add a next base index.
+    # (Oh jeetje)
+    base_index = subforms[-1]["ID"].to_i + 1
+
+    # here we need only to know the specific subforms
+    defined_subforms = get_subforms.uniq { |e| e["ID"]}
+
+    defined_subforms.each_with_index do |code, index|
+      subform = {}
+      subform["ID"] = (base_index + index).to_s
+      subform["KEY"] = code["IDENTIFIER"]
+      subform["INPUT-ID"] = code["ORIG_EIGENSCHAP_ID"]
+      subform["CODE-LIST-ID"] = code["EIGENSCHAPWAARDE_ID"]
+      subform["MATCH-KIND"] = "uuid"
+      subform["FORM"] = code["ID"]
+
+      subforms << subform
+    end
+
+    subforms
+  end
+
+  def get_subforms
+    file_id = '1RuEyRXJ4LtsW_fg3JANVD_hd4f60pxfvil2bvjkwXog'
+    tab = 'mapping'
+    subforms = @client.get_spreadsheet_tab_values(file_id, tab)
+    salt = 'sub_form_mapping'
+    subforms.each do |s|
+      s["ID"] = salt + ':' + s["ID"]
+    end
+
+    # match some of the meta data of the input fields
+    subforms.each do |sf|
+      form_input_values = form_inputs
+      type_data = form_input_values.detect {|e| e["ID"] == sf["ORIG_EIGENSCHAP_ID"]}
+      if not type_data
+        p "Warning code #{code} is not linked to existing input-field (which could be normal)"
+        next
+      end
+      sf["TYPE"] = type_data["TYPE"]
+      sf["ON-PATH"] = type_data["ON-PATH"]
+      sf["IDENTIFIER"] = type_data["IDENTIFIER"]
+    end
     subforms
   end
 
@@ -89,6 +136,18 @@ class FormData
       e
     }
 
+    subform_fields = get_subforms.reduce(Hash.new{|h, k| h[k] = [] }) do |r, e|
+      r[e["ID"]] << e["EIGENSCHAPID"]
+      r
+    end
+
+    subforms = get_subforms.map { |e|
+      e["ID"] = e["ID"]
+      e["INPUT-IDS"] = subform_fields[e["ID"]]
+      e
+    }
+    forms += subforms
+
     forms = forms.uniq { |e| e["ID"]}
     # we need a root form
     root_form = {}
@@ -99,4 +158,5 @@ class FormData
     forms << root_form
     forms
   end
+
 end
