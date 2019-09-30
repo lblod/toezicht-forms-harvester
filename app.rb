@@ -100,6 +100,7 @@ class FormSerializer
     end
     @graph << RDF.Statement(subject, MU.uuid, uuid)
     @graph << RDF.Statement(subject, SKOS.prefLabel, row["OMSCHRIJVINGKORT"])
+    @graph << RDF.Statement(subject, EXT["isActiveToezichtCodeListEntry"],  RDF::Literal.new( row["IN_USE"] == 'yes', datatype: RDF::XSD.boolean) )
 
     { row["ID"] => {"URI" => subject, "UUID" => uuid } }
   end
