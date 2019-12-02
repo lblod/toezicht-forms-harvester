@@ -108,6 +108,10 @@ class FormData
     salt = 'sub_form_mapping'
     subforms.each do |s|
       s["ID"] = salt + ':' + s["ID"]
+      if s["BELONGS_TO_NESTED_SUBFORM_ID"].empty?
+        next
+      end
+      s["BELONGS_TO_NESTED_SUBFORM_ID"] = salt + ':' + s["BELONGS_TO_NESTED_SUBFORM_ID"]
     end
 
     # match some of the meta data of the input fields
