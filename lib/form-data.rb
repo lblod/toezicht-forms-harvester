@@ -6,6 +6,12 @@ class FormData
     @client = google_client
   end
 
+  def get_type_map
+    file_id = '1qhmvKNQyr0Ss4AL5qLtQDzaHRb5Z0IXj5uT-b6jeue4'
+    inputs_tab = "map"
+    @client.get_spreadsheet_tab_values(file_id, inputs_tab)[0]['TYPE-MAP']
+  end
+
   def entity_uris
     file_id = '1WMSfiX7eubZHprsaOhYNJuUFrB9Ca4KIH9ucVUnbJxc'
     inputs_tab = "entity_uris"
