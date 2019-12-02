@@ -112,17 +112,17 @@ class FormData
 
     # match some of the meta data of the input fields
     subforms.each do |sf|
-      form_input_values = form_inputs
-      type_data = form_input_values.detect {|e| e["ID"] == sf["ORIG_EIGENSCHAP_ID"]}
-      if not type_data
-        p "Warning code #{code} is not linked to existing input-field (which could be normal)"
-        next
-      end
-      sf["TYPE"] = type_data["TYPE"]
-      sf["ON-PATH"] = type_data["ON-PATH"]
-      sf["IDENTIFIER"] = type_data["IDENTIFIER"]
-    end
-    subforms
+       form_input_values = form_inputs
+       type_data = form_input_values.detect {|e| e["ID"] == sf["ORIG_EIGENSCHAP_ID"]}
+       if not type_data
+         p "Warning code #{code} is not linked to existing input-field (which could be normal)"
+         next
+       end
+       sf["TYPE"] = type_data["TYPE"]
+       sf["ON-PATH"] = type_data["ON-PATH"]
+       sf["IDENTIFIER"] = type_data["IDENTIFIER"]
+     end
+   subforms
   end
 
   def form_nodes
