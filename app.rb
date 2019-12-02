@@ -201,13 +201,13 @@ class FormSerializer
   end
 
   def create_form(form_inputs_map, row)
-    salt = "fe4b8928-8b89-46b1-9110-da95975d949c"
+    salt = "a89e4b34-9535-4b13-8306-f9ec2498be90"
     uuid = hash(salt + ":" + row["ID"].to_s)
     subject =  RDF::URI(BASE_URI % {:resource => "form-nodes", :id => uuid})
 
     @graph << RDF.Statement(subject, RDF.type, EXT.FormNode)
     @graph << RDF.Statement(subject, MU.uuid, uuid)
-    @graph << RDF.Statement(subject, EXT["typeMap"], row["TYPE-MAP"])
+    @graph << RDF.Statement(subject, EXT["typeMap"], @type_map)
 
     row["INPUT-IDS"].each do |id|
       if form_inputs_map[id]
