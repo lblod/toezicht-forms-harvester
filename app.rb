@@ -78,7 +78,7 @@ class FormSerializer
   end
 
   def create_input_state()
-    salt = "0e1a2708-39fb-4218-b2c7-0436886e4053"
+    salt = "51404887-800e-45eb-9971-2a2acd202358"
     validation_name = "empty"
     state_name = "noSend"
     uuid = hash(salt + ":" + validation_name + ":" + state_name)
@@ -133,7 +133,7 @@ class FormSerializer
   end
 
   def create_form_input(row, input_state)
-    salt = "018547bf-c213-4a2b-953d-1f457412fdf0"
+    salt = "080278ab-3bde-4f52-99ce-967cb0572d1f"
     uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "form-inputs", :id => uuid})
 
@@ -166,7 +166,7 @@ class FormSerializer
   end
 
   def create_dynamic_subform(form_inputs_map, forms_map, code_lists_map, row)
-    salt = "fc356663-539a-427a-89d9-0a0bb22139d4"
+    salt = "1236ce66-bcb2-4bcd-bb5e-d82c0193668a"
     uuid = hash(salt + ":" + row["ID"])
     subject =  RDF::URI(BASE_URI % {:resource => "dynamic-subforms", :id => uuid})
 
