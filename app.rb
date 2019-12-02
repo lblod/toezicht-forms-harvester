@@ -7,6 +7,25 @@ require 'digest'
 require 'fileutils'
 require 'digest/md5'
 
+############################################################################
+# DISCLAIMER
+# So far, we have been lucky with the generation of the forms. But in fact,
+# it is not correct. We will get in trouble in the following described case.
+#
+# The 'form-input' are not context sensitive, i.e. their behaviour does not depend
+# on the form-node they are coming from.
+#
+# Suppose we have formNodeA and formNodeB, both containing formInputA.
+# formInputA is a selectBox with option1 and option2.
+# In context formNodeA, whatever option selected, no new form-node should be rendered.
+# In context formNodeB, if option2 is selected formNodeC should be rendered (through a dynamic-subform)
+# Current implementation will always render formNodeC if option2 is selected.
+#
+# So for this script the same conceptual selectBox for every form-node, a new instance should be
+# created.
+# This feels somewhat weird, because this selectBox always contains the same content, but is not uniquely
+# identified. A little bit like an atom that reacts differently in water vs air or so.
+#############################################################################
 class FormSerializer
   FOAF = RDF::Vocab::FOAF
   DC = RDF::Vocab::DC
