@@ -47,6 +47,7 @@ class FormSerializer
   end
 
   def load_form_data
+    @type_map = @form_data.get_type_map
     @entity_uris = @form_data.entity_uris
     @code_lists = @form_data.code_lists
     @form_inputs = @form_data.form_inputs
