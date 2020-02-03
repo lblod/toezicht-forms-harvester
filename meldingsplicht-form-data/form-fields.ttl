@@ -23,6 +23,9 @@
 # groups (probably) too
 # TODO: code lists should be includes as migrations and be availible on endpoint
 # TODO: complex skos scheme
+
+# TODO: extra validation: Only specific type of dossier should be availible to specific type of bestuurseenheid.
+# TODO: the list of dossiers to propose should differ from bestuurseenheidType to bestuurseenheidtype
 fields:0827fafe-ad19-49e1-8b2e-105d2c08a54a a form:Field ;
     mu:uuid "0827fafe-ad19-49e1-8b2e-105d2c08a54a" ;
     sh:name "Type dossier" ;
@@ -47,6 +50,13 @@ fields:0cdfe85f-ec65-498f-bd26-0ec611967de0 a form:Field ;
     sh:name "Opmerking" ;
     sh:order 500 ;
     sh:path rdfs:comment ;
+    form:displayType displayTypes:textArea.
+
+fields:bd6ee5ac-22d6-4279-bcba-3ed279021aac a form:Field ;
+    mu:uuid "bd6ee5ac-22d6-4279-bcba-3ed279021aac" ;
+    sh:name "Dossieromschrijving" ;
+    sh:order 600 ;
+    sh:path dct:description ;
     form:displayType displayTypes:textArea.
 
 fields:a8f6a6cb-dbb8-488c-878d-05603791a9eb a form:Field ;
@@ -304,3 +314,12 @@ fields:c955d641-b9b3-4ec7-9838-c2a477c7e95c a form:Field ;
     sh:path prov:atLocation ;
     #form:validations [];
     form:displayType displayTypes:filesAndLinks .
+
+# TODO: this is also a highly custom component
+fields:c955d641-b9b3-4ec7-9838-c2a477c7e95c a form:Field ;
+    mu:uuid "c955d641-b9b3-4ec7-9838-c2a477c7e95c" ;
+    sh:name "Opcentiem" ;
+    sh:order 3502 ;
+    sh:path lblodBesluit:taxRate ;
+    #form:validations [];
+    form:displayType displayTypes:vLabelOpcentiem .
