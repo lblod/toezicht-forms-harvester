@@ -2,3 +2,5 @@
 *~
 google_api_credentials
 output/*
+.log
+.log/*
