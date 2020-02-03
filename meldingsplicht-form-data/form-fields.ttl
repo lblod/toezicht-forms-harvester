@@ -1,0 +1,306 @@
+@prefix form: <http://lblod.data.gift/vocabularies/forms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#>.
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix mu: <http://mu.semte.ch/vocabularies/core/> .
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/> .
+@prefix : <http://data.lblod.info/forms/> .
+@prefix fieldGroups: <http://data.lblod.info/field-groups/> .
+@prefix fields: <http://data.lblod.info/fields/> .
+@prefix displayTypes: <http://lblod.data.gift/display-types/> .
+@prefix eli: <http://data.europa.eu/eli/ontology#>.
+@prefix besluit: <http://data.vlaanderen.be/ns/besluit#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix prov: <http://www.w3.org/ns/prov#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lblodBesluit: <http://lblod.data.gift/vocabularies/besluit/> .
+@prefix besluit: <http://data.vlaanderen.be/ns/besluit#>.
+@prefix mandaat: <http://data.vlaanderen.be/ns/mandaat#>.
+@prefix elod: <http://linkedeconomy.org/ontology#>.
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+# conditional fields are dynamic
+# groups (probably) too
+# TODO: code lists should be includes as migrations and be availible on endpoint
+# TODO: complex skos scheme
+fields:0827fafe-ad19-49e1-8b2e-105d2c08a54a a form:Field ;
+    mu:uuid "0827fafe-ad19-49e1-8b2e-105d2c08a54a" ;
+    sh:name "Type dossier" ;
+    sh:order 100 ;
+    sh:path rdf:type ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path rdf:type ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+      ],
+      [ a form:BesluittypeConstraint ;
+        form:grouping form:Bag ;
+        sh:path rdf:type ;
+        form:conceptScheme <https://data.vlaanderen.be/id/conceptscheme/BesluitDocumentType> ;
+        sh:resultMessage "Er dient exact 1 waarde voor type besluit te worden ingevuld."@nl
+      ] ;
+    form:displayType displayTypes:typeDossierSelect.
+
+fields:0cdfe85f-ec65-498f-bd26-0ec611967de0 a form:Field ;
+    mu:uuid "0cdfe85f-ec65-498f-bd26-0ec611967de0" ;
+    sh:name "Opmerking" ;
+    sh:order 500 ;
+    sh:path rdfs:comment ;
+    form:displayType displayTypes:textArea.
+
+fields:a8f6a6cb-dbb8-488c-878d-05603791a9eb a form:Field ;
+    mu:uuid "a8f6a6cb-dbb8-488c-878d-05603791a9eb" ;
+    sh:name "Gaat het over het origineel document of over een wijziging?" ;
+    sh:order 700 ;
+    sh:path lblodBesluit:authenticityType ;
+    form:validations
+      [ a form:ValidCodelistEntry ; #TODO
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:authenticityType ;
+        form:conceptScheme <http://lblod.data.gift/concept-schemes/ac9bc402-c8e6-41fd-ad57-fad15622e560> ;
+        sh:resultMessage "De waarde komt niet uit de opgegeven codelijst."@nl
+      ] ;
+    form:displayType displayTypes:dynamicSelect.
+
+fields:6ffb0ed7-769a-41e4-b5a9-f6fb0287b235 a form:Field ;
+    mu:uuid "6ffb0ed7-769a-41e4-b5a9-f6fb0287b235" ;
+    sh:name "Ondernemingsnummer betreffend bedrijf/bestuur" ;
+    sh:order 900 ;
+    sh:path ( eli:is_about dct:identifier) ;
+    form:displayType displayTypes:defaultInput.
+
+fields:78bfbd91-0778-4573-a52d-4c53b3c512eb a form:Field ;
+    mu:uuid "78bfbd91-0778-4573-a52d-4c53b3c512eb" ;
+    sh:name "Naam betreffend bedrijf/bestuur" ;
+    sh:order 1000 ;
+    sh:path ( eli:is_about skos:prefLabel) ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path ( eli:is_about skos:prefLabel ) ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+      ];
+    form:displayType displayTypes:defaultInput.
+
+fields:41737f90-02d6-4036-8d60-5d5b6ccf939c a form:Field ;
+    mu:uuid "41737f90-02d6-4036-8d60-5d5b6ccf939c" ;
+    sh:name "Rapportjaar" ;
+    sh:order 1800 ;
+    sh:path elod:financialYear ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path elod:financialYear ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+      ],
+      [ a sh:PropertyShape ;
+        form:grouping form:MatchEvery ;
+        sh:path elod:financialYear ;
+        sh:resultMessage "Geef een geldig jaar op."@nl;
+        sh:dataType xsd:gYear ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:defaultInput.
+
+fields:bffbea8d-e55b-4e3d-86e8-ba7aaee7863d a form:Field ;
+    mu:uuid "bffbea8d-e55b-4e3d-86e8-ba7aaee7863d" ;
+    sh:name "Welk beslissingsorgaan nam het besluit?" ;
+    sh:order 2000 ;
+    sh:path eli:passed_by ;
+    form:validations
+      [ a form:AdminstrativeUnitCodelistConstraint ; #TODO
+        form:grouping form:MatchEvery ;
+        sh:path eli:passed_by ],
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit veld is verplicht."@nl;
+        sh:path eli:passed_by ] ;
+    form:displayType displayTypes:bestuursorgaanSelect .
+
+fields:3dd6ed93-40f7-4d70-a6cb-f4de53dc8bfb a form:Field ;
+    mu:uuid "3dd6ed93-40f7-4d70-a6cb-f4de53dc8bfb" ;
+    sh:name "Datum zitting/besluit" ;
+    sh:order 2600 ;
+    sh:path ( [ sh:inversePath besluit:heeftBesluitenlijst ] prov:startedAtTime ) ;  # see https://www.w3.org/TR/shacl/#property-paths for syntax
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit is een verplicht veld.";
+        sh:path ( [ sh:inversePath besluit:heeftBesluitenlijst ] prov:startedAtTime ) ],
+      [ a sh:PropertyShape ;
+        form:grouping form:MatchEvery ;
+        sh:path ( [ sh:inversePath besluit:heeftBesluitenlijst ] prov:startedAtTime ) ;
+        sh:dataType xsd:dateTime ;
+        sh:resultMessage "Geeft een geldige datum en tijd op."; #TODO
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:dateTime .
+
+fields:ef31b839-c461-4732-b35c-a8b6c7507cf1 a form:Field ;
+    mu:uuid "ef31b839-c461-4732-b35c-a8b6c7507cf1" ;
+    sh:name "MAR-code" ;
+    sh:order 3100 ;
+    sh:path lblodBesluit:chartOfAccount ;
+    form:validations
+      [ a form:ValidCodelistEntry ; #TODO
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:chartOfAccount ;
+        form:conceptScheme  <http://lblod.data.gift/concept-schemes/b65b15ba-6755-4cd2-bd07-2c2cf3c0e4d3>;
+        sh:resultMessage "De waarde komt niet uit de opgegeven codelijst."@nl
+      ] ;
+    form:displayType displayTypes:dynamicSelect.
+
+fields:a1b6c2e1-c1c3-45fb-84e7-cdd241a3130d:required a form:Field ;
+    mu:uuid "a1b6c2e1-c1c3-45fb-84e7-cdd241a3130d" ;
+    sh:name "MAR-code" ;
+    sh:order 3101 ;
+    sh:path lblodBesluit:chartOfAccount ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit is een verplicht veld.";
+        sh:path lblodBesluit:chartOfAccount ],
+      [ a form:ValidCodelistEntry ; #TODO
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:chartOfAccount ;
+        form:conceptScheme  <http://lblod.data.gift/concept-schemes/b65b15ba-6755-4cd2-bd07-2c2cf3c0e4d3>;
+        sh:resultMessage "De waarde komt niet uit de opgegeven codelijst."@nl
+      ] ;
+    form:displayType displayTypes:dynamicSelect.
+
+fields:7793c27f-a41b-4665-a876-da9d94075a70 a form:Field ;
+    mu:uuid "7793c27f-a41b-4665-a876-da9d94075a70" ;
+    sh:name "Geldt vanaf" ;
+    sh:order 3200 ;
+    sh:path eli:first_date_entry_in_force ;
+    form:validations
+      [ a sh:PropertyShape ; #TODO
+        form:grouping form:MatchEvery ;
+        sh:path eli:first_date_entry_in_force ;
+        sh:resultMessage "Geef een geldige datum op.";
+        sh:dataType xsd:date ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:Input.
+
+fields:4b32c8fb-9725-4f9f-9872-b04198732483:required a form:Field ;
+    mu:uuid "4b32c8fb-9725-4f9f-9872-b04198732483" ;
+    sh:name "Geldt vanaf" ;
+    sh:order 3201 ;
+    sh:path eli:first_date_entry_in_force ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path eli:first_date_entry_in_force ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+      ],
+      [ a sh:PropertyShape ; #TODO
+        form:grouping form:MatchEvery ;
+        sh:path eli:first_date_entry_in_force ;
+        sh:resultMessage "Geef een geldige datum op.";
+        sh:dataType xsd:date ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:Input.
+
+fields:eeacea67-d327-4952-bbfa-31207823ba87 a form:Field ;
+    mu:uuid "eeacea67-d327-4952-bbfa-31207823ba87" ;
+    sh:name "Geldt tot" ;
+    sh:order 3300 ;
+    sh:path eli:date_no_longer_in_force ;
+    form:validations
+      [ a sh:PropertyShape ; #TODO
+        form:grouping form:MatchEvery ;
+        sh:path eli:date_no_longer_in_force ;
+        sh:resultMessage "Geef een geldige datum op.";
+        sh:dataType xsd:date ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:Input.
+
+fields:3a9f6f7d-2952-4128-84cc-bc8dc3d1ee44:required a form:Field ;
+    mu:uuid "3a9f6f7d-2952-4128-84cc-bc8dc3d1ee44" ;
+    sh:name "Geldt tot" ;
+    sh:order 3301 ;
+    sh:path eli:date_no_longer_in_force ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path eli:date_no_longer_in_force ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+      ],
+      [ a sh:PropertyShape ; #TODO
+        form:grouping form:MatchEvery ;
+        sh:path eli:date_no_longer_in_force ;
+        sh:resultMessage "Geef een geldige datum op.";
+        sh:dataType xsd:date ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:Input.
+
+# TODO: complex skos scheme
+fields:7cd14dfd-81ff-4a5d-8374-5879c5877c4c:required a form:Field ;
+    mu:uuid "7cd14dfd-81ff-4a5d-8374-5879c5877c4c" ;
+    sh:name "Soort Belasting" ;
+    sh:order 3400 ;
+    sh:path lblodBesluit:taxType ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:taxType ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ],
+    [ a form:SingleCodelistValue ; #TODO
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:taxType ;
+        form:conceptScheme <http://lblod.data.gift/concept-schemes/ac9bc402-c8e6-41fd-ad57-fad15622e560>  ;
+        sh:resultMessage "De waarde komt niet uit de opgegeven codelijst."@nl
+      ] ;
+    form:displayType displayTypes:dynamicSelect.
+
+fields:49dbe1be-877a-4890-8465-1510ff18ce18 a form:Field ;
+    mu:uuid "49dbe1be-877a-4890-8465-1510ff18ce18" ;
+    sh:name "Datum van publicatie op webtoepassing" ;
+    sh:order 3700 ;
+    sh:path eli:date_publication ;
+    form:validations
+      [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:resultMessage "Dit is een verplicht veld.";
+        sh:path eli:date_publication ],
+      [ a sh:PropertyShape ;
+        form:grouping form:MatchEvery ;
+        sh:path eli:date_publication ;
+        sh:resultMessage "Geeft een geldige datum op.";
+        sh:dataType xsd:date ;
+        sh:nodeKind sh:Literal ] ;
+    form:displayType displayTypes:date .
+
+# TODO: complex skos scheme
+# They come from the same code list, but have a broader range.
+# some complex validation will occur here
+# https://github.com/Informatievlaanderen/OSLOthema-lokaleBesluiten/blob/master/codelijsten/besluit-type.ttl#L433
+fields:e834ec56-2db3-43d8-8a54-baf6cc0463c6 a form:Field ;
+    mu:uuid "e834ec56-2db3-43d8-8a54-baf6cc0463c6" ;
+    sh:name "Type reglement/verordening" ;
+    sh:order 3800 ;
+    sh:path rdf:type ;
+    form:validations
+    [ a form:RequiredConstraint ;
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:taxType ;
+        sh:resultMessage "Dit veld is verplicht."@nl
+    ],
+    [ a form:SingleCodelistValue ; #TODO
+        form:grouping form:Bag ;
+        sh:path lblodBesluit:taxType ;
+        form:conceptScheme <http://lblod.data.gift/concept-schemes/ac9bc402-c8e6-41fd-ad57-fad15622e560>  ;
+        sh:resultMessage "De waarde komt niet uit de opgegeven codelijst."@nl
+      ] ;
+    form:displayType displayTypes:dynamicSelect.
+
+# TODO:
+# This will be a complex validation. So either a file should be uploaded or user should provide a valid link
+# to a file.
+fields:c955d641-b9b3-4ec7-9838-c2a477c7e95c a form:Field ;
+    mu:uuid "c955d641-b9b3-4ec7-9838-c2a477c7e95c" ;
+    sh:name "Bestanden of URLs" ;
+    sh:order 3900 ;
+    sh:path prov:atLocation ;
+    #form:validations [];
+    form:displayType displayTypes:filesAndLinks .
