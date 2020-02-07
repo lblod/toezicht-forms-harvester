@@ -107,7 +107,7 @@ fields:41737f90-02d6-4036-8d60-5d5b6ccf939c a form:Field ;
       [ a form:ValidYear ;
         form:grouping form:MatchEvery ;
         sh:path elod:financialYear ;
-        sh:resultMessage "Geef een geldig jaar op."@n ] ;
+        sh:resultMessage "Geef een geldig jaar op."@nl ] ;
     form:displayType displayTypes:defaultInput.
 
 fields:bffbea8d-e55b-4e3d-86e8-ba7aaee7863d a form:Field ;
