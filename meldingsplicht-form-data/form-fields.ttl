@@ -104,12 +104,10 @@ fields:41737f90-02d6-4036-8d60-5d5b6ccf939c a form:Field ;
         sh:path elod:financialYear ;
         sh:resultMessage "Dit veld is verplicht."@nl
       ],
-      [ a sh:PropertyShape ;
+      [ a form:ValidYear ;
         form:grouping form:MatchEvery ;
         sh:path elod:financialYear ;
-        sh:resultMessage "Geef een geldig jaar op."@nl;
-        sh:dataType xsd:gYear ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geef een geldig jaar op."@n ] ;
     form:displayType displayTypes:defaultInput.
 
 fields:bffbea8d-e55b-4e3d-86e8-ba7aaee7863d a form:Field ;
@@ -137,12 +135,10 @@ fields:3dd6ed93-40f7-4d70-a6cb-f4de53dc8bfb a form:Field ;
         form:grouping form:Bag ;
         sh:resultMessage "Dit is een verplicht veld.";
         sh:path ( [ sh:inversePath besluit:heeftBesluitenlijst ] prov:startedAtTime ) ],
-      [ a sh:PropertyShape ;
+      [ a form:ValidDateTime ;
         form:grouping form:MatchEvery ;
         sh:path ( [ sh:inversePath besluit:heeftBesluitenlijst ] prov:startedAtTime ) ;
-        sh:dataType xsd:dateTime ;
-        sh:resultMessage "Geeft een geldige datum en tijd op."; #TODO
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geeft een geldige datum en tijd op."] ;
     form:displayType displayTypes:dateTime .
 
 fields:ef31b839-c461-4732-b35c-a8b6c7507cf1 a form:Field ;
@@ -183,12 +179,10 @@ fields:7793c27f-a41b-4665-a876-da9d94075a70 a form:Field ;
     sh:order 3200 ;
     sh:path eli:first_date_entry_in_force ;
     form:validations
-      [ a sh:PropertyShape ; #TODO
+      [ a form:ValidDate
         form:grouping form:MatchEvery ;
         sh:path eli:first_date_entry_in_force ;
-        sh:resultMessage "Geef een geldige datum op.";
-        sh:dataType xsd:date ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geef een geldige datum op."] ;
     form:displayType displayTypes:Input.
 
 fields:4b32c8fb-9725-4f9f-9872-b04198732483:required a form:Field ;
@@ -202,12 +196,10 @@ fields:4b32c8fb-9725-4f9f-9872-b04198732483:required a form:Field ;
         sh:path eli:first_date_entry_in_force ;
         sh:resultMessage "Dit veld is verplicht."@nl
       ],
-      [ a sh:PropertyShape ; #TODO
+      [ a form:ValidDate
         form:grouping form:MatchEvery ;
         sh:path eli:first_date_entry_in_force ;
-        sh:resultMessage "Geef een geldige datum op.";
-        sh:dataType xsd:date ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geef een geldige datum op."@nl ] ;
     form:displayType displayTypes:Input.
 
 fields:eeacea67-d327-4952-bbfa-31207823ba87 a form:Field ;
@@ -216,12 +208,10 @@ fields:eeacea67-d327-4952-bbfa-31207823ba87 a form:Field ;
     sh:order 3300 ;
     sh:path eli:date_no_longer_in_force ;
     form:validations
-      [ a sh:PropertyShape ; #TODO
+      [ a form:ValidDate ;
         form:grouping form:MatchEvery ;
         sh:path eli:date_no_longer_in_force ;
-        sh:resultMessage "Geef een geldige datum op.";
-        sh:dataType xsd:date ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geef een geldige datum op."@nl ] ;
     form:displayType displayTypes:Input.
 
 fields:3a9f6f7d-2952-4128-84cc-bc8dc3d1ee44:required a form:Field ;
@@ -235,12 +225,10 @@ fields:3a9f6f7d-2952-4128-84cc-bc8dc3d1ee44:required a form:Field ;
         sh:path eli:date_no_longer_in_force ;
         sh:resultMessage "Dit veld is verplicht."@nl
       ],
-      [ a sh:PropertyShape ; #TODO
+      [ a form:ValidDate ;
         form:grouping form:MatchEvery ;
         sh:path eli:date_no_longer_in_force ;
-        sh:resultMessage "Geef een geldige datum op.";
-        sh:dataType xsd:date ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geef een geldige datum op."@nl] ;
     form:displayType displayTypes:Input.
 
 # TODO: complex skos scheme
@@ -273,12 +261,10 @@ fields:49dbe1be-877a-4890-8465-1510ff18ce18 a form:Field ;
         form:grouping form:Bag ;
         sh:resultMessage "Dit is een verplicht veld.";
         sh:path eli:date_publication ],
-      [ a sh:PropertyShape ;
+      [ a form:ValidDate ;
         form:grouping form:MatchEvery ;
         sh:path eli:date_publication ;
-        sh:resultMessage "Geeft een geldige datum op.";
-        sh:dataType xsd:date ;
-        sh:nodeKind sh:Literal ] ;
+        sh:resultMessage "Geeft een geldige datum op."@nl ] ;
     form:displayType displayTypes:date .
 
 # TODO: complex skos scheme
