@@ -302,8 +302,8 @@ fields:c955d641-b9b3-4ec7-9838-c2a477c7e95c a form:Field ;
     form:displayType displayTypes:filesAndLinks .
 
 # TODO: this is also a highly custom component
-fields:c955d641-b9b3-4ec7-9838-c2a477c7e95c a form:Field ;
-    mu:uuid "c955d641-b9b3-4ec7-9838-c2a477c7e95c" ;
+fields:1ee5132e-28c0-4292-9fe6-24c7be456580 a form:Field ;
+    mu:uuid "1ee5132e-28c0-4292-9fe6-24c7be456580" ;
     sh:name "Opcentiem" ;
     sh:order 3502 ;
     sh:path lblodBesluit:taxRate ;
